@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Cliente;
+use App\User;
 
 class ClienteController extends Controller
 {
@@ -21,8 +22,7 @@ class ClienteController extends Controller
     public function index()
     {
         $clientes = $this->cliente->orderBy('id', 'DESC')->paginate(10);
-
-        return view('clientes.index', compact('clientes'));
+        return view('clientes.index', compact('clientes','user'));
     }
 
     /**
@@ -103,6 +103,7 @@ class ClienteController extends Controller
         $clientes->cpf = $request->get('cpf');
         $clientes->rg = $request->get('rg');
         $clientes->telefone = $request->get('telefone');
+        $clientes->usuario_update = $request->get('usuario_update');
         $clientes->local_nascimento = $request->get('local_nascimento');
         $clientes->data_nascimento = $request->get('data_nascimento');
 

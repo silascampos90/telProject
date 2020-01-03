@@ -18,6 +18,7 @@
                                 <div class="p-5">
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Novo Usuário !</h1>
+                                        @include('flash::message')
                                     </div>
                                     <form action="{{route('register')}}" method="post">
                                         <div class="form-group">
@@ -30,6 +31,7 @@
                                             <input type="password" class="form-control" name="password" required>
                                         </div>
                                         <button type="submit" class="btn btn-success">Criar Usuário</button>
+                                        <a href="/login" style="display:flex; float:right" class="btn btn-info">Fazer Login</a>
                                     </form>
                                 </div>
                             </div>

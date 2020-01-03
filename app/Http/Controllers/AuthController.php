@@ -14,39 +14,52 @@ class AuthController extends Controller
     {
         $this->usuario = $usuario;
     }
-    public function getLogin(){
+    public function getLogin()
+    {
         return view('auth.login');
     }
-    public function getRegister(){
+    public function getRegister()
+    {
         return view('auth.register');
     }
 
-    public function postRegister (Request $request){
-        
-        $data = $request->all();        
+    public function postRegister(Request $request)
+    {
 
-        $usuarios = $this->usuario;
-        $usuarios->name = $data['name'];
-        $usuarios->email = $data['email'];
-        $usuarios->password = bcrypt($data['password']);
-        $usuarios->save();
-        return redirect()->route('login');
+        try {
+
+            $data = $request->all();
+
+            $usuarios = $this->usuario;
+            $usuarios->name = $data['name'];
+            $usuarios->email = $data['email'];
+            $usuarios->password = bcrypt($data['password']);
+            $usuarios->save();
+            flash('Registrado com sucesso, faça o login!')->success()->important();
+            return redirect()->route('login');
+        } catch (\Exception $th) {
+            flash('Registro Não realizado, tente novamente!')->error()->important();
+            return redirect()->back();
+        }
     }
-    
 
-    public function postLogin(Request $request){
+
+    public function postLogin(Request $request)
+    {
 
         $request->validate([
             'email' => 'required|email|max:255',
             'password' => 'required'
         ]);
 
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            flash('Usuário Logado com sucesso!')->success()->important();
             return redirect()->route('usuarios.index');
         } else {
-            return redirect()->back()->with('msg',"Acesso negado com estas credenciais");
+            flash('Credenciais Inválidas')->error()->important();
+            return redirect()->back();
         }
-
-        
+        flash('Credenciais Inválidas')->error()->important();
+        return redirect()->back();
     }
 }

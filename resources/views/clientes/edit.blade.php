@@ -148,6 +148,7 @@
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Atualizar Cliente</h6>
+                            @include('flash::message')
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -160,6 +161,7 @@
                                             <div class="form-group">
                                                 @csrf
                                                 @method("PUT")
+                                                <input type="hidden" name="usuario_update" value="{{ Auth::user()->id}}">
                                                 <label for="">Nome</label>
                                                 <input type="text" class="form-control" value="{{$clientes->name}}" name="name" required>
                                                 <label for="">CPF</label>

@@ -20,7 +20,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $usuarios = $this->usuario->orderBy('id','DESC')->paginate(10);
+        $usuarios = $this->usuario->orderBy('id', 'DESC')->paginate(10);
 
         return view('usuarios.index', compact('usuarios'));
     }
@@ -43,15 +43,20 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
-        
+        try {
+            $data = $request->all();
 
-        $usuarios = $this->usuario;
-        $usuarios->name = $data['name'];
-        $usuarios->email = $data['email'];
-        $usuarios->password = bcrypt($data['password']);
-        $usuarios->save();
-        return redirect()->route('usuarios.index');
+            $usuarios = $this->usuario;
+            $usuarios->name = $data['name'];
+            $usuarios->email = $data['email'];
+            $usuarios->password = bcrypt($data['password']);
+            $usuarios->save();
+            flash('Usuário Criado com Sucesso')->success()->important();
+            return redirect()->route('usuarios.index');
+        } catch (\Exception $th) {
+            flash('Erro ao tentar Criar Novo Usuário, Tente Novamente')->error()->important();
+            return redirect()->back();
+        }
     }
 
     /**
@@ -75,7 +80,6 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        
     }
 
     /**
@@ -87,16 +91,22 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        try {
+            $usuarios = $this->usuario->find($id);
+            $usuarios->name = $request->get('name');
+            $usuarios->email = $request->get('email');
+            if (!empty($request->get('password'))) {
+                $usuarios->password = bcrypt($request->get('password'));
+            }
+            $usuarios->save();
+            flash('Usuário Atualizado com Sucesso')->success()->important();
+            return redirect()->route('usuarios.index');
+        } catch (\Exception $th) {
+            flash('Erro ao tentar Atualizar o Usuário, Tente Novamente')->error()->important();
+            return redirect()->back();
+        }
         //
-        $usuarios = $this->usuario->find($id);
-        $usuarios->name = $request->get('name');
-        $usuarios->email = $request->get('email');
-        if(!empty($request->get('password'))){
-            $usuarios->password = bcrypt($request->get('password'));
-        }        
-        $usuarios->save();
 
-        return redirect()->route('usuarios.index');
 
     }
 
@@ -108,9 +118,16 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        
-        $usuarios = $this->usuario->find($id);
-        $usuarios->delete();
-        return redirect()->route('usuarios.index');
+        try {
+            $usuarios = $this->usuario->findOrFail($id);
+            $usuarios->delete();
+            flash('Usuário Deletado com Sucesso')->success()->important();
+            return redirect()->route('usuarios.index');
+        } catch (\Throwable $th) {
+            flash('Erro ao tentar Deletar o Usuário, Tente Novamente')->error()->important();
+            return redirect()->back();
+        }
+
+      
     }
 }

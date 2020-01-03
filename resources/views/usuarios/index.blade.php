@@ -147,6 +147,7 @@
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Lista de Usuários</h6>
+                            @include('flash::message')
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -169,7 +170,10 @@
                                                 <form action="{{route('usuarios.destroy', ['usuario' => $usuario->id])}}" method="post">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger">EXCLUIR</button>
+                                                    <button type="submit" 
+                                                        {{ (Auth::user()->id == $usuario->id) ?'disabled':''}} 
+                                                        title="{{ (Auth::user()->id == $usuario->id) ?"Desabilitado, pois esse usuário está logado.":'Excluir'}}"
+                                                        class="btn btn-danger">EXCLUIR</button>
                                                 </form>
                                             </td>
                                         </tr>

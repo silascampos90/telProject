@@ -18,6 +18,7 @@
                 <div class="p-5">
                   <div class="text-center">
                     <h1 class="h4 text-gray-900 mb-4">Bem vindo !</h1>
+                    @include('flash::message')
                   </div>
                   <form class="user" action="{{route('login')}}" method="POST">
                   @csrf
